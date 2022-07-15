@@ -5,7 +5,7 @@ class Message < ApplicationRecord
 
   settings do
     mappings dynamic: false do
-      indexes :body, type: :text, analyzer: :english
+      indexes :body, type: :text, analyzer: :snowball
     end
   end
   def self.search_in_chat(query,chat_id)

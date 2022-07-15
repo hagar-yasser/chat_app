@@ -25,6 +25,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'active_model_serializers', '~> 0.10.6'
 gem 'elasticsearch-model', '~> 7.2.1'
 gem 'elasticsearch-rails', '~>7.2.1'
+gem 'sidekiq','~>6'
+gem 'redis-namespace'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
