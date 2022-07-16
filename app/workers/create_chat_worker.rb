@@ -4,18 +4,12 @@ class CreateChatWorker
     def prin
         puts "here"
     end
-    def perform (app_token)
-        Application.transaction do
-            puts Application.where("token = :token",{token:app_token})
-            application=Application.where("token = :token",{token: app_token})[0]
-            application.lock!
-            application.chats_count= application.chats_count + 1
-            application.save!
-            
-            # application.update(
-            #   chats_count: application.chats_count + 1)
-            @chat = Chat.new(number: application.chats_count, applications_id: application.id)
-            @chat.save!
-        end
+    def perform (chats_count,app_id)    
+        # application.update(
+        #   chats_count: application.chats_count + 1)
+        # chat = Chat.new(number: application.chats_count, applications_id: application.id)
+        chat = Chat.new(number: chats_count, applications_id: app_id)
+        chat.save!
+    
     end
 end
