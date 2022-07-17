@@ -1,0 +1,85 @@
+version: "3.4"
+services:
+  db:
+    image: mysql:5.7
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: instabugtask_development
+      MYSQL_USER: instabug
+      MYSQL_PASSWORD: instabug
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  redis:
+    image: redis:7
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - app
+      - db
+      - redis
+      - elasticsearch
+    volumes:
+      - .:/app
+      - gem_cache:/usr/local/bundle/gems
+      - node_modules:/app/node_modules
+    # env_file: .env
+    environment:
+      RAILS_ENV: development
+      REDIS_HOST: redis
+      DB_USER: instabug
+      DB_NAME: instabugtask_development
+      DB_PASSWORD: instabug
+      DB_HOST: db
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+
+    entrypoint: ./entrypoints/sidekiq-entrypoint.sh
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.3.2
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - db
+      - redis
+      - elasticsearch
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - gem_cache:/usr/local/bundle/gems
+      - node_modules:/app/node_modules
+      # links:
+      #     - db
+    environment:
+      ELASTICSEARCH_HOST: elasticsearch
+      DB_USER: instabug
+      DB_NAME: instabugtask_development
+      DB_PASSWORD: instabug
+      DB_HOST: db
+      RAILS_ENV: development
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      REDIS_HOST: redis
+volumes:
+  gem_cache:
+  db_data:
+  node_modules:
+  es_data:

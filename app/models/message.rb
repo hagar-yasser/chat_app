@@ -1,6 +1,7 @@
 class Message < ApplicationRecord
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
+  Message.import(force:true)
   settings do
     mappings dynamic: false do
       indexes :body, type: :text, analyzer: :snowball

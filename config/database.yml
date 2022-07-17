@@ -13,20 +13,24 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: instabug
-  password: instabug
-  host: localhost
-  socket: /var/run/mysqld/mysqld.sock
+  # username: instabug
+  # password: instabug
+  # host: localhost
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  # socket: /var/run/mysqld/mysqld.sock
 
 development:
   <<: *default
-  database: instabugtask_development
+  # database: instabugtask_development
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: instabugtask_test
+  # database: instabugtask_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -49,6 +53,6 @@ test:
 #
 production:
   <<: *default
-  database: instabugtask_production
-  username: instabugtask
-  password: <%= ENV['INSTABUGTASK_DATABASE_PASSWORD'] %>
+  # database: instabugtask_production
+  # username: instabugtask
+  # password: <%= ENV['INSTABUGTASK_DATABASE_PASSWORD'] %>

@@ -1,0 +1,3 @@
+-- CREATE USER IF NOT EXISTS 'instabug'@'%' IDENTIFIED BY 'instabug';
+-- GRANT ALL PRIVILEGES ON *.* TO 'instabug'@'%' WITH GRANT OPTION;
+-- FLUSH PRIVILEGES;
