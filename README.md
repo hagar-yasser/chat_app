@@ -25,6 +25,29 @@ rails 5.0.0
 - creating/updating messages within chats
 - searching through messages within a chat
 
+## Assumptions
+
+1. Returning the chat number in the chat creation response:
+
+   - Since it is mentioned in the description that no 2 chats may have the same number
+   - Since it is also mentioned that I should avoid writing directly to MySQL in the chat creation request
+   - I assumed that I could directly write to the chats_count column in the applications table after acquiring the proper lock to ensure no 2 chats get assigned the same number, increment the chats_count and send the correct new chat number in the response
+   - I will then add the new chat through a queuing system (sidekiq) in the background not instantaneously
+   - This assumption is having the risk of inconsistency between the applications table and the chats table since the asynchronous chat creation request handled in the background may encounter a problem and get dropped
+
+2. Returning the message number in the message creation response
+
+   - Since it is not mentioned in the description that no 2 messages may have the same number, there are 2 assumptions that can be made:
+
+     1. No 2 messages may have the same number. This assumption will mean the same solution mentioned above for the chat creation will be used with the same risk.
+     2. 2 messages may have the same number:-
+
+        - The message number will be the timestamp of the request
+        - Return the Message number in the response
+        - Add the message to the messages table and update the messages\*count column in the chat table in the background.
+
+        _I am currently using the first assumption._
+
 ## Endpoints
 
 - GET http://localhost:3000/applications/{app_token}
@@ -81,11 +104,11 @@ I run the docker containers on a 8 GB ram laptop with linux OS. I notices an inc
 
 #### Incase the ram exhaustion or the timeout error were encoutered try doing the following steps
 
-- First restart docker (systemctl restart docker)
-- Second close the browsers open
-- Third run docker-compose down
-- Fourth run docker-compose down -v
-- Fifth retry
+1. Restart docker (systemctl restart docker)
+2. Close the browsers open
+3. Run docker-compose down
+4. Run docker-compose down -v
+5. Retry
 
 ## Future Work
 
@@ -94,8 +117,9 @@ I run the docker containers on a 8 GB ram laptop with linux OS. I notices an inc
   1. Decrease the latency of the response and reduce the SQL queries to the DB.
   2. Mitigate the inconsistency risk caused by creating chats and messages asynchronously and reading them before they wre created.
 
-- Separating the web server from the app server by separating the routing functionalities from the backend logic. This can be done through:-
+- Separating the request frontend server from the app server by separating the routing functionalities from the backend logic. This can be done through:-
   1. Creating 2 applications one that receives HTTP requests from the user and the other that processes the backend logic.
   2. Creating a Message Broker server
-  3. The web server would process the HTTP requests and forwards a message in the message queue of the app server
-  4. This way the app server can be scaled separate from the web server depending on the load of the application
+  3. The request frontend server would process the HTTP requests and forwards a message in the message queue of the app server
+  4. This way the app server can be scaled separate from the request frontend server depending on the load of the application
+  5. A load balancer can be used to divide the requests between the running app servers
