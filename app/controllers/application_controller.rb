@@ -7,11 +7,11 @@ class ApplicationController < ActionController::API
   private
 
   def standard_error
-    render json: {error: "Internal Error"}, status: 500
+    render json: {error: "Internal Error! Try Again!"}, status: 500
   end
 
   def not_found
-    render json: {error: "Not Found"}, status: 404
+    render json: {error: "Not Found!"}, status: 404
   end
 
 end

@@ -1,6 +1,8 @@
 class ApplicationsController < ApplicationController
   def create
     application=Application.new(name: params[:name])
+    # application.regenerate_token
+    # CreateApplicationWorker.perform_async(application)
     application.save
     render json: application.to_json( only: [:token , :name , :chats_count])
   end
@@ -14,8 +16,8 @@ class ApplicationsController < ApplicationController
     # }
   end
   def update
-    application=Application.where("token = :token",{token: params[:app_token]})[0]
-    UpdateApplicationWorker.perform_async(application,params[:name])
-    render json: {token:application.token,name:params[:name],chats_count:application.chats_count},status:200
+    UpdateApplicationWorker.perform_async(params[:app_token],params[:name])
+    # render json: {token:application.token,name:params[:name],chats_count:application.chats_count},status:200
+    render json: {message:"Application name updated!"},status:200
   end
 end

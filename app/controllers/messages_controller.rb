@@ -26,10 +26,10 @@ class MessagesController < ApplicationController
     render json:messages.to_json(only:[:number,:body])
   end
   def update
-    application=Application.where("token = :token",{token: params[:app_token]})[0]
-    chat=Chat.where("applications_id = :applications_id and number= :chat_no",{applications_id: application.id,chat_no: params[:chat_no]})[0]
-    message=Message.where("chats_id = :chats_id and number = :message_no",{chats_id: chat.id,message_no: params[:message_no]})[0]
-    UpdateMessageWorker.perform_async(message,params[:body])
-    render json: {number: message.number,body: params[:body]},status: 200
+    
+    UpdateMessageWorker.perform_async(params[:app_token],params[:chat_no],params[:message_no],params[:body])
+    # render json: {number: params[:message_no],body: params[:body]},status: 200
+    render json: {message: "Message Body Updated!"},status: 200
+
   end
 end
