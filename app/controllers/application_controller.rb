@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   # protect_from_forgery with: :exception
-# rescue_from ActiveRecord::RecordNotFound , with: :not_found
-# rescue_from StandardError , with: :standard_error
+rescue_from ActiveRecord::RecordNotFound , with: :not_found
+rescue_from StandardError , with: :standard_error
 
 
   private
