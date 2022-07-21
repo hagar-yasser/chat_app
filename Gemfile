@@ -27,6 +27,7 @@ gem 'elasticsearch-model', '~> 7.2.1'
 gem 'elasticsearch-rails', '~>7.2.1'
 gem 'sidekiq','~>6'
 gem 'redis-namespace'
+# gem 'dotenv'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

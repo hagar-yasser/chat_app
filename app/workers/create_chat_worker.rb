@@ -1,15 +1,18 @@
 class CreateChatWorker 
     include Sidekiq::Worker
-    sidekiq_options retry: false
+    sidekiq_options retry: true
     def prin
         puts "here"
     end
-    def perform (chats_count,app_id)    
-        # application.update(
-        #   chats_count: application.chats_count + 1)
-        # chat = Chat.new(number: application.chats_count, applications_id: application.id)
-        chat = Chat.new(number: chats_count, applications_id: app_id)
-        chat.save!
+    def perform (token,number)  
+        Application.transaction do
+            application=Application.where("token = :token",{token: token})[0]
+            application.lock!
+            application.chats_count= application.chats_count + 1
+            application.save!
+            chat = Chat.new(number: number, applications_id: application.id)
+            chat.save!
+        end
     
     end
 end

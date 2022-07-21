@@ -34,6 +34,8 @@ services:
     environment:
       RAILS_ENV: development
       REDIS_HOST: redis
+      REDIS_DB: 2
+      REDIS_PORT: 6379
       DB_USER: instabug
       DB_NAME: instabugtask_development
       DB_PASSWORD: instabug
@@ -80,6 +82,8 @@ services:
       RAILS_ENV: development
       ELASTICSEARCH_URL: http://elasticsearch:9200
       REDIS_HOST: redis
+      REDIS_DB: 3
+      REDIS_PORT: 6379
 volumes:
   gem_cache:
   db_data:

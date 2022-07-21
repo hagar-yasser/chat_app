@@ -59,6 +59,7 @@ GEM
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
     crass (1.0.6)
+    dotenv (2.7.6)
     elasticsearch (7.17.1)
       elasticsearch-api (= 7.17.1)
       elasticsearch-transport (= 7.17.1)
@@ -216,6 +217,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.10.6)
   byebug
   coffee-rails (~> 4.2)
+  dotenv
   elasticsearch-model (~> 7.2.1)
   elasticsearch-rails (~> 7.2.1)
   jbuilder (~> 2.5)
