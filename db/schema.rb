@@ -10,24 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220715122129) do
+ActiveRecord::Schema.define(version: 20220722132918) do
 
   create_table "applications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
-    t.string   "token",                   null: false
-    t.string   "name",                    null: false
-    t.integer  "chats_count", default: 0
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.string   "token",                               null: false
+    t.string   "name",                                null: false
+    t.integer  "chats_count",         default: 0
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "has_different_count", default: false
+    t.index ["has_different_count"], name: "index_applications_on_has_different_count", using: :btree
     t.index ["token"], name: "unique_tokens", unique: true, using: :btree
   end
 
   create_table "chats", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "number"
-    t.integer  "messages_count",  default: 0
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.integer  "messages_count",      default: 0
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.integer  "applications_id"
+    t.boolean  "has_different_count", default: false
     t.index ["applications_id", "number"], name: "index_chats_on_applications_id_and_number", using: :btree
+    t.index ["has_different_count"], name: "index_chats_on_has_different_count", using: :btree
   end
 
   create_table "messages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|

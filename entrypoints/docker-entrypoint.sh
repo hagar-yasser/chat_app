@@ -1,5 +1,5 @@
 #!/bin/sh
-
+cd instabugtask
 set -e
 
 if [ -f tmp/pids/server.pid ]; then
